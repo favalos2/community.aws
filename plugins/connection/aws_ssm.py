@@ -501,7 +501,14 @@ class Connection(ConnectionBase):
         self._init_clients()
 
         self._vvvv(f"START SSM SESSION: {self.instance_id}")
-        start_session_args = dict(Target=self.instance_id, Parameters={})
+      
+        if self.is_windows:
+          ssm_parameters = dict()
+          
+        else:
+          ssm_parameters = {"command": ["bash -l"]}          
+
+        start_session_args = dict(Target=self.instance_id, Parameters=ssm_parameters)
         document_name = self.get_option("ssm_document")
         if document_name is not None:
             start_session_args["DocumentName"] = document_name
@@ -689,11 +696,12 @@ class Connection(ConnectionBase):
                 cmd = self._shell._encode_script(cmd, preserve_rc=True)
             cmd = cmd + "; echo " + mark_start + "\necho " + mark_end + "\n"
         else:
-            cmd = (
-                f"printf '%s\\n' '{mark_start}';\n"
-                f"echo | {cmd};\n"
-                f"printf '\\n%s\\n%s\\n' \"$?\" '{mark_end}';\n"
-            )  # fmt: skip
+           # cmd = (
+            #    f"printf '%s\\n' '{mark_start}';\n"
+            #    f"echo | {cmd};\n"
+            #    f"printf '\\n%s\\n%s\\n' \"$?\" '{mark_end}';\n"
+            #)  # fmt: skip
+            cmd = " echo " + mark_start + "; " + cmd + "; echo $'\\n'$?; " + " echo " + mark_end + ";\n"
 
         self._vvvv(f"_wrap_command: \n'{to_text(cmd)}'")
         return cmd
