@@ -1,6 +1,6 @@
 ---
 namespace: community
-name: aws
+name: gd-aws
 version: 7.0.0-dev0
 readme: README.md
 authors:
