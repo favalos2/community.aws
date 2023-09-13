@@ -503,8 +503,7 @@ class Connection(ConnectionBase):
         self._vvvv(f"START SSM SESSION: {self.instance_id}")
       
         if self.is_windows:
-          ssm_parameters = dict()
-          
+          ssm_parameters = dict()          
         else:
           ssm_parameters = {"command": ["bash -l"]}          
 
@@ -512,9 +511,13 @@ class Connection(ConnectionBase):
         document_name = self.get_option("ssm_document")
         if document_name is not None:
             start_session_args["DocumentName"] = document_name
-            print(start_session_args["DocumentName"])
         else:
-            print("document name was none")
+            if self.is_windows:
+              pass # should be handled in line 512 for windows        
+            else:
+              start_session_args["DocumentName"] = "AWS-StartInteractiveCommand"
+              
+          
         response = self._client.start_session(**start_session_args)
         self._session_id = response["SessionId"]
 
