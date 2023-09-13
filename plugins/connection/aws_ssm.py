@@ -513,6 +513,8 @@ class Connection(ConnectionBase):
         if document_name is not None:
             start_session_args["DocumentName"] = document_name
             print(start_session_args["DocumentName"])
+        else:
+            print("document name was none")
         response = self._client.start_session(**start_session_args)
         self._session_id = response["SessionId"]
 
