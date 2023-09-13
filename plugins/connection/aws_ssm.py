@@ -512,6 +512,7 @@ class Connection(ConnectionBase):
         document_name = self.get_option("ssm_document")
         if document_name is not None:
             start_session_args["DocumentName"] = document_name
+            print(start_session_args["DocumentName"])
         response = self._client.start_session(**start_session_args)
         self._session_id = response["SessionId"]
 
