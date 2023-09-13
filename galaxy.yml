@@ -1,6 +1,6 @@
 ---
-namespace: gd-community
-name: gd-aws
+namespace: gd_community
+name: gd_aws
 version: 7.0.0-dev0
 readme: README.md
 authors:
