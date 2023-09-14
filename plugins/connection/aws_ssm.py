@@ -757,8 +757,11 @@ class Connection(ConnectionBase):
             if len(line) == 201:
                 line = line[:-1]
             
-            ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
-            line = ansi_escape.sub("", line)
+            if "\r" in line:
+              line = line.replace("\r", "")
+            
+            #ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+            #line = ansi_escape.sub("", line)
 
         return line
 
